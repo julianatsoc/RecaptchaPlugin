@@ -5,6 +5,11 @@ if (!defined('ABSPATH')) exit;
 
 <div class="wrap">
     <h1>Configurações do reCAPTCHA</h1>
+    <p>
+            <a href="" target="_blank" class="button button-secondary">
+                📖 Aprenda a gerar as keys
+            </a>
+        </p>
     <form method="post" action="options.php">
         <?php settings_fields('recaptcha_settings_group'); ?>
         <?php do_settings_sections('recaptcha_settings_group'); ?>
