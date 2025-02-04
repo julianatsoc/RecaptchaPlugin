@@ -29,11 +29,11 @@ function recaptcha_register_settings(){
 }
 add_action('admin_init', 'recaptcha_register_settings');
 
-function recaptcha_settings_page(){
+function recaptcha_settings_page() {
     ?>
     <div class="wrap">
-        <h1>Configurar reCAPTCHA</h1>
-        <form method= "POST" action="options.php">
+        <h1>Configurações do reCAPTCHA</h1>
+        <form method="post" action="options.php">
             <?php settings_fields('recaptcha_settings_group'); ?>
             <?php do_settings_sections('recaptcha_settings_group'); ?>
             <table class="form-table">
@@ -46,6 +46,20 @@ function recaptcha_settings_page(){
                     <td><input type="text" name="recaptcha_secret_key" value="<?php echo esc_attr(get_option('recaptcha_secret_key')); ?>" size="50" /></td>
                 </tr>
             </table>
+            <?php submit_button(); ?>
         </form>
     </div>
+    <?php
 }
+function recaptcha_add_to_forms($content) {
+    if (is_admin()) return $content;
+    
+    $site_key = get_option('recaptcha_site_key');
+    if (!$site_key) return $content;
+    
+    $recaptcha_html = '<div class="g-recaptcha" data-sitekey="' . esc_attr($site_key) . '"></div>';
+    $recaptcha_script = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+    
+    return str_replace('</form>', $recaptcha_html . '</form>' . $recaptcha_script, $content);
+}
+add_filter('the_content', 'recaptcha_add_to_forms');
